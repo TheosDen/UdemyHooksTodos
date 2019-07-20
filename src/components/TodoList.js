@@ -4,21 +4,29 @@ import TodosContext from '../context';
 const TodoList = () => {
     const {state, dispatch} = useContext(TodosContext);
 
-    console.log(state);
-
-    const title = `${state.todos.length} Todos`;
-
     return (
-        <div className="container mx-auto max-w-md text-center font-mono">
-            <h1>{title}</h1>
-            <ul>
+        <div className="container">
+            <h1 className="mx-auto">Todos items: <span className="badge badge-primary badge-pill">{state.todos.length}</span></h1>
+            <ul className="list-group">
                 {state.todos.map(item => (
-                    <li key={item.id}>
-                        <input type="checkbox" checked={item.complete}/>
+                    <li
+                        onDoubleClick={() => dispatch({type: "TOGGLE_TODO", payload: item})}
+                        className={`list-group-item list-group-item-action d-flex justify-content-between align-items-center ${item.complete && 'disabled'}`}
+                        key={item.id}
+                    >
+                        <input type="checkbox" checked={item.complete} onChange={() => dispatch({type: "TOGGLE_TODO", payload: item})} />
                         <span>{item.text}</span>
-                        <button>
-                            <img src=""/>
-                        </button>
+                        <div>
+                            <button className="btn btn-link" onClick={() => dispatch({ type: 'SET_CURRENT_TODO', payload: item})}>
+                                <img src="https://icon.now.sh/edit/" alt="edit" />
+                            </button>
+                            <button
+                                className="btn btn-link"
+                                onClick={() => dispatch({type: 'REMOVE_TODO', payload: item})}
+                            >
+                                <img src="https://icon.now.sh/delete/" alt="delete" />
+                            </button>
+                        </div>
                     </li>
                 ))}
             </ul>
